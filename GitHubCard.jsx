@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 function GitHubCard() {
     let [gitHubData,setGitHubData]=useState({});
     let [repositories,setRepositories]=useState([]);
+    let [searchQuery,setSearchQuery]=useState("");
+    const handleChange=(event)=>{
+      setSearchQuery(event.target.value);
+    };
     useEffect(()=>{
         fetch("https://api.github.com/users/MohammadRayyanMalik")
         .then(data=>data.json())
@@ -31,7 +35,12 @@ function GitHubCard() {
                     <a href={gitHubData.html_url}>Click Area to visit GitHub Profile</a>
                 </div>
             </div>
-            {/*Profile:Start */}
+            {/*Profile:end */}
+
+            {/* search */}
+
+            <input type="text" onChange={handleChange} />
+
 
             {/*Repository:Start */}
 
@@ -44,10 +53,14 @@ function GitHubCard() {
     </tr>
   </thead>
   <tbody>
-    {repositories.map((repoObj)=>{
+    {repositories.filter((repoObj)=>{
+      return repoObj.name.toLowerCase()
+      .includes(searchQuery.toLowerCase())
+    })
+    .map((repoObj)=>{
         return( <tr>
-            <th scope="row"></th>
-            <td></td>
+            <th scope="row">{repoObj.name}</th>
+            <td><a href={repoObj.html_url}>Visit Repo</a></td>
             
           </tr>)
     })}
